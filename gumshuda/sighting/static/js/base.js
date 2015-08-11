@@ -10,6 +10,22 @@
                 file;
             if (files && files.length > 0) {
                 file = files[0];
+                {
+                    //upload
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'upload');
+                    xhr.onload = function () {
+                      if (xhr.status === 200) {
+                        console.log('all done: ' + xhr.status);
+                      } else {
+                        console.log('Something went terribly wrong...');
+                      }
+                    };
+                    var formData = new FormData();
+                    formData.append('csrfmiddlewaretoken', csrf_token);
+                    formData.append('file', file);
+                    xhr.send(formData);
+                }
                 try {
                     // Create ObjectURL
                     var imgURL = window.URL.createObjectURL(file);
