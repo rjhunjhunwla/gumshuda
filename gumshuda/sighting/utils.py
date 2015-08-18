@@ -1,7 +1,6 @@
 from .models import picture
 import hashlib
 
-
 """
 Save a picture in database and return id,
 return True if picture was not seen earlier
