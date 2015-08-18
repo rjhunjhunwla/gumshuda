@@ -1,6 +1,7 @@
 from .models import picture
 import hashlib
 
+
 """
 Save a picture in database and return id,
 return True if picture was not seen earlier
@@ -22,7 +23,7 @@ Save a person data
 """
 def save_person( data ):
     return None
-    
+
 def add_source_picture( data, person_id ):
     return None
 
