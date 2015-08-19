@@ -22,7 +22,18 @@ def save_picture( data ):
 Save a person data
 """
 def save_person( data ):
-    return None
+    p = person()
+    if data.has_key( 'name' ):
+        p.name = data['name']
+    if data.has_key( 'father_name'):
+        p.father_name=data['father_name']
+    if data.has_key('mother_name'):
+        p.mother_name=data['mother_name']
+    if data.has_key('age'):
+        p.age = data['age']
+    p.save()
+    
+    return p.id
 
 """
 
