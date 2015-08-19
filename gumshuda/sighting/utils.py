@@ -1,4 +1,5 @@
 from .models import picture
+from .models import reported_sighting
 import hashlib
 
 """
@@ -23,8 +24,18 @@ Save a person data
 def save_person( data ):
     return None
 
+"""
+
+"""
 def add_source_picture( data, person_id ):
-    return None
+    pid,status = save_picture( data )
+    if status is False:
+        return "Picture already exists in record", False
+    s = source_picture()
+    s.picture_id = pid
+    s.people_id  = person_id
+    s.save()
+    return "Success",True
 
 
 """
@@ -37,4 +48,8 @@ def check_if_person_missing( data ):
 update that a person was reported by user exists in database
 """
 def update_sighthing_for_person( seen_pic_id, person_id ):
-    return None
+    r = reported_sighting()
+    r.picture_id = seen_pic_id
+    r.people_id = person_id
+    r.save()
+    return r.id
