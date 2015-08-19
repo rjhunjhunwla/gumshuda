@@ -19,6 +19,7 @@ class picture( models.Model ):
     date = models.DateTimeField(default=datetime.now)
     data = models.BinaryField()
     csum = models.CharField( max_length=1024)
+    prop = models.TextField( )
 
 class source_picture( models.Model ):
     people_id = models.ForeignKey('people')

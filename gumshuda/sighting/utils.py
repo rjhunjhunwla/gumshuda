@@ -36,7 +36,7 @@ def save_person( data ):
     return p.id
 
 """
-
+add a source picture to a person
 """
 def add_source_picture( data, person_id ):
     pid,status = save_picture( data )
@@ -52,7 +52,7 @@ def add_source_picture( data, person_id ):
 """
 data is a picture, check if the person is in  missing/found database.
 """
-def check_if_person_missing( data ):
+def check_if_person_in_db( data ):
     return None:
 
 """
