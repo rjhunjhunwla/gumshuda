@@ -13,7 +13,7 @@ class people( models.Model ):
     mother_name = models.CharField( max_length=256)
     age = models.IntegerField()
     status = models.IntegerField(default=0)
-    pub_date = models.DateTimeField()
+    pub_date = models.DateTimeField(default=datetime.now)
 
 class picture( models.Model ):
     date = models.DateTimeField(default=datetime.now)
