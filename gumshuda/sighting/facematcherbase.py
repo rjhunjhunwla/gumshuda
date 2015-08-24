@@ -1,7 +1,6 @@
 class FaceMatcherBase:
-	def __init__( self, data, isUrl = True ):
-		self.isUrl = isUrl
-		self.data = data
+	def __init__( self ):
+		pass
 
 	"""
 	check if the image has a match in database 
