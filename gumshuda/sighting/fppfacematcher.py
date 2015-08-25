@@ -15,7 +15,7 @@ class FacePPFM( facematcherbase.FaceMatcherBase ):
 		self.data = data
 		self.isUrl = isUrl 
 
-	def match( ):
+	def match( picture_id ):
 		raise NotImplementedError( 'Not yet implemented, TODO' )
 
 	def get_current_faceset( self ):
@@ -45,10 +45,15 @@ class FacePPFM( facematcherbase.FaceMatcherBase ):
 			p.prop = fpobj
 		else:
 			return False,"Face detection failed"
-			
+
 		face_set = get_current_faceset()
 		face_id,reason = get_face_id(p.prop)
 		if face_id is None:
 			return False,reason
 		api.faceset.add_face( faceset = face_set, faceid = face_id )
 		return True,""
+
+
+
+	def add_pic_to_person( person_id, pic_id ):
+		raise NotImplementedError('Todo')

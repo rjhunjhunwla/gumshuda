@@ -19,31 +19,38 @@ def index(request):
     return render( request, 'index.html', {})
 
 
-def handle_uploaded_file(f):
-	data = []
-	for chunk in f.chunks():
-		data.append(chunk)
-	return data
-
-def upload(request):
+def handle_uploaded_file(request):
 	if request.method == 'POST':
 		s = sighting()
 		s.data =  request.FILES['file'].read()
 		if len( s.data ) is 0:
-			return HttpResponse('no data')
+			return None,'No data'
 
 		out,reason = detect_face(s.data)
 		if out is False:
-			return HttpResponse(reason)		
+			return None,reason
 		
-		s.csum = hashlib.sha256(s.data).hexdigest()
-		s.save()
+		return s,""
 
-	return HttpResponse('')
+def upload(request):
+	s,reason = handle_uploaded_file(request)
+	if s is None:
+		return HttpResponse(reason)
+	f = get_facematcher(data,isUrl)
+	picture_id, status = utils.save_picture(s.data)
+	if status is True:
+		f.match(picture_id)
+	return HttpResponse(success)
 
 @login
 def add_pic_to_person(request):
-	pass
+	s,reason = handle_uploaded_file(request)
+	if s is None:
+		return HttpResponse(reason)
+
+	#This is a security issue, it should not take person id from url without verifying
+	#TODO: verify is this person is owner of this profile.
+	utils.add_source_picture(s.data, request.GET['person_id'])
 
 
 def detect_face( data, isUrl ):
