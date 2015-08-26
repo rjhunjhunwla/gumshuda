@@ -53,7 +53,7 @@ def add_source_picture( data, person_id ):
 data is a picture, check if the person is in  missing/found database.
 """
 def check_if_person_in_db( data ):
-    return None:
+    return None
 
 """
 update that a person was reported by user exists in database

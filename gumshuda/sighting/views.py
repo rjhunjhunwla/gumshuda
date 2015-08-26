@@ -5,6 +5,9 @@ from .models import sighting
 import faceplusplus
 import utils
 import fppfacematcher
+from django.shortcuts import render_to_response, redirect, render
+from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -42,7 +45,7 @@ def upload(request):
 		f.match(picture_id)
 	return HttpResponse(success)
 
-@login
+@login_required
 def add_pic_to_person(request):
 	s,reason = handle_uploaded_file(request)
 	if s is None:
@@ -57,3 +60,21 @@ def detect_face( data, isUrl ):
 	f = get_facematcher(data,isUrl)
 	status, reason = f.add_pic_to_set()
 	return status, reason
+
+
+
+def login(request):
+    # context = RequestContext(request, {
+    #     'request': request, 'user': request.user})
+    # return render_to_response('login.html', context_instance=context)
+    return render(request, 'login.html')
+
+
+@login_required(login_url='/')
+def home(request):
+    return render_to_response('home.html')
+
+
+def logout(request):
+    auth_logout(request)
+    return redirect('/sighting/')
