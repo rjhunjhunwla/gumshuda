@@ -1,9 +1,7 @@
 import facematcherbase
 import faceplusplus
 #from .models import picture
-FPP_API_KEY='c0a7934f98fcdd0765bca604c5962ca6'
-FPP_API_SECRET='UHjCbfZk0RWu5U74-c7BkOpb-L00Ilnz'
-FPP_API_HOST='https://apius.faceplusplus.com/'
+
 
 
 """

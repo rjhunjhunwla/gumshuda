@@ -72,6 +72,7 @@ def login(request):
 
 @login_required(login_url='/')
 def home(request):
+    print request.user
     return render_to_response('home.html')
 
 
