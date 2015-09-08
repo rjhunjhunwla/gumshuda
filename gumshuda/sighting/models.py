@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import datetime    
-
+from django.contrib.auth.models import User
 # Create your models here.
 
 class sighting( models.Model ):
@@ -14,6 +14,7 @@ class people( models.Model ):
     age = models.IntegerField()
     status = models.IntegerField(default=0)
     pub_date = models.DateTimeField(default=datetime.now)
+    user = models.ForeignKey(User)
 
 class picture( models.Model ):
     date = models.DateTimeField(default=datetime.now)
