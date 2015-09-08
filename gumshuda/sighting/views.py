@@ -1,6 +1,7 @@
 
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import Http404
 from .models import sighting
 import faceplusplus
 import utils
@@ -11,9 +12,7 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
-FPP_API_KEY='c0a7934f98fcdd0765bca604c5962ca6'
-FPP_API_SECRET=''
-FPP_API_HOST='https://apius.faceplusplus.com/'
+
 
 def get_facematcher( data, isUrl ):
 	return fppfacematcher.FacePPFM(data,isUrl)
@@ -47,12 +46,16 @@ def upload(request):
 
 @login_required
 def add_pic_to_person(request):
+	if 'person_id' not in request.GET:
+		raise Http404
+	objs = people.objects.filter(user = request.user.id, id= request.GET['person_id'] )
+	if objs is None:
+		raise Http404
+
 	s,reason = handle_uploaded_file(request)
 	if s is None:
 		return HttpResponse(reason)
 
-	#This is a security issue, it should not take person id from url without verifying
-	#TODO: verify is this person is owner of this profile.
 	utils.add_source_picture(s.data, request.GET['person_id'])
 
 
@@ -64,9 +67,6 @@ def detect_face( data, isUrl ):
 
 
 def login(request):
-    # context = RequestContext(request, {
-    #     'request': request, 'user': request.user})
-    # return render_to_response('login.html', context_instance=context)
     return render(request, 'login.html')
 
 
