@@ -1,5 +1,6 @@
-import facematcherbase
+from facematcherbase import *
 import faceplusplus
+from config import *
 # from .models import picture
 
 
@@ -10,8 +11,9 @@ Faceplusplus API based face recognition.
 """
 
 
-class FacePPFM(facematcherbase.FaceMatcherBase):
+class FacePPFM(FaceMatcherBase):
     def __init__(self, data, isUrl=True):
+        FaceMatcherBase.__init__(self)
         self.data = data
         self.isUrl = isUrl
 
@@ -46,8 +48,8 @@ class FacePPFM(facematcherbase.FaceMatcherBase):
         else:
             return False, "Face detection failed"
 
-        face_set = get_current_faceset()
-        face_id, reason = get_face_id(p.prop)
+        face_set = self.get_current_faceset()
+        face_id, reason = self.get_face_id(p.prop)
         if face_id is None:
             return False, reason
         api.faceset.add_face(faceset=face_set, faceid=face_id)

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import Http404
-from .models import sighting
+from .models import Sighting
 import faceplusplus
 import utils
 import fppfacematcher
@@ -11,8 +11,6 @@ from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
-
-
 
 
 def get_facematcher(data, isUrl):
@@ -25,7 +23,7 @@ def index(request):
 
 def handle_uploaded_file(request):
     if request.method == 'POST':
-        s = sighting()
+        s = Sighting()
         s.data = request.FILES['file'].read()
         if len(s.data) is 0:
             return None, 'No data'

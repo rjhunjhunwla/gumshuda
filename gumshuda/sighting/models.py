@@ -5,12 +5,12 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class sighting(models.Model):
+class Sighting(models.Model):
     loc = models.CharField(max_length=64)
     picture_id = models.ForeignKey('picture')
 
 
-class people(models.Model):
+class People(models.Model):
     name = models.CharField(max_length=256)
     father_name = models.CharField(max_length=256)
     mother_name = models.CharField(max_length=256)
@@ -20,19 +20,19 @@ class people(models.Model):
     user = models.ForeignKey(User)
 
 
-class picture(models.Model):
+class Picture(models.Model):
     date = models.DateTimeField(default=datetime.now)
     data = models.BinaryField()
     csum = models.CharField(max_length=1024)
     prop = models.TextField()
 
 
-class source_picture(models.Model):
+class SourcePicture(models.Model):
     people_id = models.ForeignKey('people')
     picture_id = models.ForeignKey('picture')
 
 
-class reported_sighting(models.Model):
+class ReportedSighting(models.Model):
     picture_id = models.ForeignKey('picture')
     people_id = models.ForeignKey('people')
     action = models.TextField()
