@@ -1,8 +1,9 @@
 from facematcherbase import *
 import faceplusplus
-from config import *
-# from .models import picture
-
+import os.path
+import sys
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'gumshuda'))
+import config
 
 
 """
@@ -23,17 +24,17 @@ class FacePPFM(FaceMatcherBase):
     def get_current_faceset(self):
         return ""
 
-    def get_face_id(self, j):
+    def get_face_id(self, json_response):
         try:
-            if len(j['face']) == 1:
-                return j['face'][0]['face_id']
+            if len(json_response['face']) == 1:
+                return json_response['face'][0]['face_id']
             else:
                 return None, "Multiple or no face found"
         except:
             return None, "No face found"
 
     def add_pic_to_set(self, p):
-        api = faceplusplus.API(FPP_API_KEY, FPP_API_SECRET, FPP_API_HOST)
+        api = faceplusplus.API(config.FPP_API_KEY, config.FPP_API_SECRET, config.FPP_API_HOST)
         try:
             if self.isUrl:
                 fpobj = api.detection.detect(url=self.data)
