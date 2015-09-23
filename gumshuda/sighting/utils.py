@@ -2,12 +2,13 @@ from .models import picture
 from .models import reported_sighting
 import hashlib
 
-"""
-Save a picture in database and return id,
-return True if picture was not seen earlier
-retrun False if picture already exists
-"""
+
 def save_picture( data ):
+    """
+    Save a picture in database and return id,
+    return True if picture was not seen earlier
+    retrun False if picture already exists
+    """
     csum = hashlib.sha256(data).hexdigest()
     p = picture.objects.filter(csum=csum)
     if not p:
@@ -18,10 +19,11 @@ def save_picture( data ):
         return p.id,True
     return p[0].id,False
 
-"""
-Save a person data
-"""
+
 def save_person( data ):
+    """
+    Save a person data
+    """
     p = person()
     if data.has_key( 'name' ):
         p.name = data['name']
@@ -35,10 +37,11 @@ def save_person( data ):
     
     return p.id
 
-"""
-add a source picture to a person
-"""
+
 def add_source_picture( data, person_id ):
+    """
+    add a source picture to a person
+    """
     pid,status = save_picture( data )
     if status is False:
         return "Picture already exists in record", False
@@ -49,16 +52,17 @@ def add_source_picture( data, person_id ):
     return "Success",True
 
 
-"""
-data is a picture, check if the person is in  missing/found database.
-"""
 def check_if_person_in_db( data ):
+    """
+    data is a picture, check if the person is in  missing/found database.
+    """
     return None
 
-"""
-update that a person was reported by user exists in database
-"""
+
 def update_sighthing_for_person( seen_pic_id, person_id ):
+    """
+    update that a person was reported by user exists in database
+    """
     r = reported_sighting()
     r.picture_id = seen_pic_id
     r.people_id = person_id
