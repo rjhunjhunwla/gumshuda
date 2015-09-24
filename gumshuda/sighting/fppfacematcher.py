@@ -54,7 +54,7 @@ class FacePPFM(FaceMatcherBase):
         if face_id is None:
             return False, reason
         api.faceset.add_face(faceset=face_set, faceid=face_id)
-        return True, ""
+        return True, face_id
 
-    def add_pic_to_person(self, person_id, pic_id):
+    def add_pic_to_person(self, person_id, face_id):
         raise NotImplementedError('Todo')

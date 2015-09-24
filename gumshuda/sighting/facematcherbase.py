@@ -8,12 +8,9 @@ class FaceMatcherBase:
         """
         raise NotImplementedError('Derived class should override this function')
 
-    def add_pic_to_set(self, p):
-        """
-        add image to dataset
-        """
+    def get_face_id(self, pic_data):
         raise NotImplementedError('Derived class should override this function')
-
+        
     def add_pic_to_person(self, person_id, pic_id):
         """
         add the picture_id picture to person_id

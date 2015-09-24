@@ -48,17 +48,31 @@ def upload(request):
 
 @login_required
 def add_pic_to_person(request):
+
+    # validate if this user owns this profile, then only she can add picture to this profile.
     if 'person_id' not in request.GET:
         raise Http404
     objs = people.objects.filter(user=request.user.id, id=request.GET['person_id'])
     if objs is None:
         raise Http404
 
+    ''' 
+    Steps:
+    1. Detect Face in picture.
+    2. Save the picture locally
+    3. Add the picture in FaceMatcher module to person.
+    '''
     s, reason = handle_uploaded_file(request)
     if s is None:
         return HttpResponse(reason)
 
-    utils.add_source_picture(s.data, request.GET['person_id'])
+    # save picture in local database
+    cause, statue = utils.add_source_picture(s.data, request.GET['person_id'])
+
+    # Face reco. module may need to preprocess the picture for matching add it to person
+    if status is True:
+        f= get_facematcher(s.data,False)
+        f.add_pic_to_person( request.GET['person_id'])
 
 
 def detect_face(data, isUrl):
