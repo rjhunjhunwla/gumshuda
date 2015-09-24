@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 class Sighting(models.Model):
     loc = models.CharField(max_length=64)
-    picture_id = models.ForeignKey('picture')
+    picture_id = models.ForeignKey('Picture')
 
 
 class People(models.Model):
@@ -28,11 +28,11 @@ class Picture(models.Model):
 
 
 class SourcePicture(models.Model):
-    people_id = models.ForeignKey('people')
-    picture_id = models.ForeignKey('picture')
+    people_id = models.ForeignKey('People')
+    picture_id = models.ForeignKey('Picture')
 
 
 class ReportedSighting(models.Model):
-    picture_id = models.ForeignKey('picture')
-    people_id = models.ForeignKey('people')
+    picture_id = models.ForeignKey('Picture')
+    people_id = models.ForeignKey('People')
     action = models.TextField()
