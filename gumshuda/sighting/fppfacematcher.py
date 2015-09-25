@@ -2,9 +2,9 @@ from facematcherbase import *
 import faceplusplus
 import os.path
 import sys
+
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'gumshuda'))
 import config
-
 
 """
 Faceplusplus API based face recognition.
@@ -13,18 +13,18 @@ Faceplusplus API based face recognition.
 
 
 class FacePPFM(FaceMatcherBase):
-    def __init__(self, data, isUrl=True):
-        FaceMatcherBase.__init__(self)
-        self.data = data
-        self.isUrl = isUrl
+    def __init__(self, data, is_url):
+        FaceMatcherBase.__init__(self, data, is_url)
+        self.api = faceplusplus.API(config.FPP_API_KEY, config.FPP_API_SECRET, config.FPP_API_HOST)
 
-    def match(self,picture_id):
+    def match(self):
         raise NotImplementedError('Not yet implemented, TODO')
 
     def get_current_faceset(self):
         return ""
 
-    def get_face_id(self, json_response):
+    @staticmethod
+    def get_face_id(json_response):
         try:
             if len(json_response['face']) == 1:
                 return json_response['face'][0]['face_id']
@@ -33,28 +33,36 @@ class FacePPFM(FaceMatcherBase):
         except:
             return None, "No face found"
 
-    def add_pic_to_set(self, p):
-        api = faceplusplus.API(config.FPP_API_KEY, config.FPP_API_SECRET, config.FPP_API_HOST)
+    def add_pic_to_set(self):
+        status, reason = self.find_face()
+        if status is False:
+            return False, reason
+
+        face_set = self.get_current_faceset()
+        self.api.faceset.add_face(faceset=face_set, faceid=self.face_id)
+        return True, "Success"
+
+    def add_pic_to_person(self, person_id):
+        self.person_id = person_id
+        status, reason = self.add_pic_to_set()
+        if status is False:
+            return status, reason
+        try:
+            out = self.api.person.add_face(face_id=self.face_id, person=person_id)
+        except:
+            return False, out
+        return True, "Success"
+
+    def find_face(self):
         try:
             if self.isUrl:
-                fpobj = api.detection.detect(url=self.data)
+                fpobj = self.api.detection.detect(url=self.data)
             else:
-                fpobj = api.detection.detect(post=True, img=self.data)
+                fpobj = self.api.detection.detect(post=True, img=self.data)
         except Exception as e:
             # handle all errors
             return False, str(e)
-
-        if fpobj is not None:
-            p.prop = fpobj
-        else:
-            return False, "Face detection failed"
-
-        face_set = self.get_current_faceset()
-        face_id, reason = self.get_face_id(p.prop)
-        if face_id is None:
-            return False, reason
-        api.faceset.add_face(faceset=face_set, faceid=face_id)
-        return True, face_id
-
-    def add_pic_to_person(self, person_id, face_id):
-        raise NotImplementedError('Todo')
+        self.face_id = FacePPFM.get_face_id(fpobj)
+        if self.face_id is None:
+            return False, "No face found"
+        return True, "Success"
