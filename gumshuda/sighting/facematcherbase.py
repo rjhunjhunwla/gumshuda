@@ -19,5 +19,6 @@ class FaceMatcherBase:
     def add_pic_to_person(self, person_id):
         """
         add the picture_id picture to person_id
+        :returns: face_id
         """
         raise NotImplementedError('Derived class should override this function')

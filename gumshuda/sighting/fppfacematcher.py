@@ -6,13 +6,12 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'gumshuda'))
 import config
 
-"""
-Faceplusplus API based face recognition.
-@see http://www.faceplusplus.com
-"""
-
 
 class FacePPFM(FaceMatcherBase):
+    """
+    Faceplusplus API based face recognition.
+    @see http://www.faceplusplus.com
+    """
     def __init__(self, data, is_url):
         FaceMatcherBase.__init__(self, data, is_url)
         self.api = faceplusplus.API(config.FPP_API_KEY, config.FPP_API_SECRET, config.FPP_API_HOST)

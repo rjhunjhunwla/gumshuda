@@ -15,9 +15,10 @@ class People(models.Model):
     father_name = models.CharField(max_length=256)
     mother_name = models.CharField(max_length=256)
     age = models.IntegerField()
+    gender = models.CharField(max_length=2)  # M,F,U
     status = models.IntegerField(default=0)
     pub_date = models.DateTimeField(default=datetime.now)
-    user = models.ForeignKey(User)
+    reporting_user_id = models.ForeignKey(User)
 
 
 class Picture(models.Model):
@@ -36,3 +37,4 @@ class ReportedSighting(models.Model):
     picture_id = models.ForeignKey('Picture')
     people_id = models.ForeignKey('People')
     action = models.TextField()
+    reporting_user_id = models.IntegerField()
