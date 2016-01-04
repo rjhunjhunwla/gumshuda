@@ -5,8 +5,8 @@ from . import views
 
 urlpatterns = [
     #url(r'^$', views.index, name='index'),
-    #url(r'^upload$', views.upload, name='upload'),
-    url(r'^$', 'sighting.views.login'),
-    url(r'home/$', 'sighting.views.home'),
-    url(r'logout/$', 'sighting.views.logout'),
+    url(r'^upload$', views.upload, name='upload'),
+    url(r'^$', views.index),
+    url(r'home/$', views.home),
+    url(r'logout/$', views.logout),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

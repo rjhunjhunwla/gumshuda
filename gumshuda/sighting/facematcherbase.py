@@ -22,3 +22,6 @@ class FaceMatcherBase:
         :returns: face_id
         """
         raise NotImplementedError('Derived class should override this function')
+
+    def face_data(self):
+        return ""

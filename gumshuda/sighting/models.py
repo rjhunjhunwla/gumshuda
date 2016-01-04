@@ -15,7 +15,7 @@ class People(models.Model):
     father_name = models.CharField(max_length=256)
     mother_name = models.CharField(max_length=256)
     age = models.IntegerField()
-    gender = models.CharField(max_length=2)  # M,F,U
+    gender = models.CharField(max_length=1)  # M,F,U
     status = models.IntegerField(default=0)
     pub_date = models.DateTimeField(default=datetime.now)
     reporting_user_id = models.ForeignKey(User)

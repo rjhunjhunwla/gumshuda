@@ -3,10 +3,11 @@ from .models import ReportedSighting
 from .models import SourcePicture
 from .models import People
 from .models import Sighting
+from oxfordaifacematcher import OxFpp
 import hashlib
 
 
-def save_picture(data):
+def save_picture(data, face_data):
     """
     Save a picture in database and return id,
     :param data: picture data
@@ -19,6 +20,7 @@ def save_picture(data):
         p = Picture()
         p.csum = csum
         p.data = data
+        p.prop = face_data
         p.save()
         return p.id, True
     return p[0].id, False
@@ -52,11 +54,11 @@ def add_source_picture(person_id, face_matcher):
     """
     if face_matcher.face_id is None:
         raise Exception('No face id found')
-    pid, status = save_picture(face_matcher.data)
+    pid, status = save_picture(face_matcher.data, face_matcher.face_data())
     if status is False:
         # TODO: At this point it should be verified if picture belongs to same person
         # if not then it seems that 2 profiles for same person is being created.
-        raise Exception( "Picture already exists in record" )
+        raise Exception("Picture already exists in record")
     s = SourcePicture()
     s.picture_id = pid
     s.people_id = person_id
@@ -94,26 +96,20 @@ def update_sighting_for_person(seen_pic_id, person_id, reporter):
     return r.id
 
 
+def get_matcher(data, is_url):
+    return OxFpp(data, is_url)
+
+
 def handle_uploaded_file(request):
     if request.method == 'POST':
-        s = Sighting()
-        s.data = request.FILES['file'].read()
-        if len(s.data) is 0:
-            return None, 'No data'
+        data = request.FILES['file'].read()
+        if len(data) > 0:
+            face_matcher = get_matcher(data, False)
+            face_matcher.find_face()
+            if face_matcher.face_id is not None:
+                return face_matcher
+            else:
+                raise Exception("No face found")
 
-        out, reason = detect_face(s.data)
-        if out is False:
-            return None, reason
-
-        return s, ""
-
-
-def upload(request):
-    s, reason = handle_uploaded_file(request)
-    if s is None:
-        return HttpResponse(reason)
-    f = get_facematcher(data, isUrl)
-    picture_id, status = utils.save_picture(s.data)
-    if status is True:
-        f.match(picture_id)
-    return HttpResponse(success)
+        raise Exception("no image data found")
+    raise Exception("Only POST supported")

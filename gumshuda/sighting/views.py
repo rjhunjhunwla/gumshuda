@@ -5,18 +5,12 @@ from .models import Sighting
 from .models import People
 
 import utils
-import fppfacematcher
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
-
-
-def get_matcher(data, isUrl):
-    return fppfacematcher.FacePPFM(data, isUrl)
-
 
 def index(request):
     return render(request, 'index.html', {})
@@ -37,10 +31,17 @@ def add_pic_to_person(request):
     2. Save the picture locally
     3. Add the picture in FaceMatcher module to person.
     '''
-    pass
+    try:
+        matcher = utils.handle_uploaded_file(request)
+        utils.add_source_picture(request.GET['person_id'],matcher)
+    except Exception as e:
+        raise Http404(e)
+    return HttpResponse("done")
 
 
 def check_if_missing(request):
+    matcher = utils.handle_uploaded_file(request)
+    matcher.match()
     pass
 
 
@@ -54,12 +55,6 @@ def create_new_missing_profile(request):
 
 
 ######################################################################
-def detect_face(data, isUrl):
-    f = get_matcher(data, isUrl)
-    status, reason = f.find_face()
-    return status, reason
-
-
 def login(request):
     return render(request, 'login.html')
 
