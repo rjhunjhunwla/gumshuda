@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import Http404
 from .models import Sighting
-from .models import People
+from .models import MissingPerson
 
 import utils
 from django.shortcuts import render_to_response, redirect, render
@@ -21,7 +21,7 @@ def add_pic_to_person(request):
     # validate if this user owns this profile, then only she can add picture to this profile.
     if 'person_id' not in request.GET:
         raise Http404
-    objs = People.objects.filter(reporting_user_id=request.user.id, id=request.GET['person_id'])
+    objs = MissingPerson.objects.filter(reporting_user_id=request.user.id, id=request.GET['person_id'])
     if objs is None:
         raise Http404
 

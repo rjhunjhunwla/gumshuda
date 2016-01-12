@@ -10,7 +10,7 @@ class Sighting(models.Model):
     picture_id = models.ForeignKey('Picture')
 
 
-class People(models.Model):
+class MissingPerson(models.Model):
     name = models.CharField(max_length=256)
     father_name = models.CharField(max_length=256)
     mother_name = models.CharField(max_length=256)
@@ -19,6 +19,9 @@ class People(models.Model):
     status = models.IntegerField(default=0)
     pub_date = models.DateTimeField(default=datetime.now)
     reporting_user_id = models.ForeignKey(User)
+    person_group_id = models.CharField(max_length=256)
+    metadata = models.CharField(max_length=1024)
+    missing_or_found = models.BooleanField(default=True) #True means missing, false means reported found
 
 
 class Picture(models.Model):
@@ -26,15 +29,18 @@ class Picture(models.Model):
     data = models.BinaryField()
     csum = models.CharField(max_length=1024)
     prop = models.TextField()
+    face_id = models.CharField(max_length=256)
 
 
 class SourcePicture(models.Model):
-    people_id = models.ForeignKey('People')
+    missing_person_id = models.ForeignKey('MissingPerson')
     picture_id = models.ForeignKey('Picture')
+    face_id = models.CharField(max_length=256, null=False)
+
 
 
 class ReportedSighting(models.Model):
     picture_id = models.ForeignKey('Picture')
-    people_id = models.ForeignKey('People')
+    missing_person_id = models.ForeignKey('MissingPerson')
     action = models.TextField()
     reporting_user_id = models.IntegerField()

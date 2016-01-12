@@ -1,11 +1,10 @@
 from .models import Picture
 from .models import ReportedSighting
 from .models import SourcePicture
-from .models import People
+from .models import MissingPerson
 from .models import Sighting
 from oxfordaifacematcher import OxFpp
 import hashlib
-
 
 def save_picture(data, face_data):
     """
@@ -30,24 +29,32 @@ def save_person(data, user_id):
     """
     Save a person data
     """
-    p = People()
+    p = MissingPerson()
+
     if data.has_key('name'):
         p.name = data['name']
+    else:
+        raise KeyError("Missing Name of missing person")
     if data.has_key('father_name'):
         p.father_name = data['father_name']
     if data.has_key('mother_name'):
         p.mother_name = data['mother_name']
     if data.has_key('age'):
         p.age = data['age']
+    else:
+        raise KeyError("Missing age of missing person")
     if data.has_key('gender'):
         p.gender = data['gender']
+    else:
+        raise KeyError("Missing gender of missing person")
     p.user = user_id
+
     p.save()
 
     return p.id
 
 
-def add_source_picture(person_id, face_matcher):
+def add_source_picture(missing_person_id, face_matcher):
     """
     add a source picture to a person
     :type face_matcher: FaceMatcherBase
@@ -61,9 +68,9 @@ def add_source_picture(person_id, face_matcher):
         raise Exception("Picture already exists in record")
     s = SourcePicture()
     s.picture_id = pid
-    s.people_id = person_id
-    face_matcher.person_id = person_id
-    face_matcher.add_pic_to_person(person_id)
+    s.missing_person_id = missing_person_id
+    face_matcher.person_id = missing_person_id
+    face_matcher.add_pic_to_person(missing_person_id)
     s.face_id = face_matcher.face_id
     s.save()
 
@@ -87,7 +94,7 @@ def update_sighting_for_person(seen_pic_id, person_id, reporter):
     """
     r = ReportedSighting()
     r.picture_id = seen_pic_id
-    r.people_id = person_id
+    r.missing_person_id = person_id
     if reporter is not None:
         r.reporting_user_id = reporter
     else:
@@ -113,3 +120,12 @@ def handle_uploaded_file(request):
 
         raise Exception("no image data found")
     raise Exception("Only POST supported")
+
+
+def get_face_ids_for_missing_person_from_db(person_id):
+    """
+    return all face_ids associated with person as stored in local db.
+    :param person_id: missing person id.
+    :return: array of face ids.
+    """
+    return SourcePicture.objects.filter(missing_person_id=person_id).value_list('face_id', flat=True)

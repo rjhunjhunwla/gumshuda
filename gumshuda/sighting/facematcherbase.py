@@ -3,8 +3,9 @@ class FaceMatcherBase:
         self.data = data
         self.is_url = is_url
         self.picture_id = None
-        self.person_id = None
+        self.missing_person_id = None
         self.face_id = None
+        self.face_data = None
         pass
 
     def match(self):
@@ -23,5 +24,10 @@ class FaceMatcherBase:
         """
         raise NotImplementedError('Derived class should override this function')
 
-    def face_data(self):
-        return ""
+    def add_person(self, missing_person):
+        """
+        Add a missing person to matcher core DB
+        :param missing_person:
+        :return:
+        """
+        raise NotImplementedError("Derived class should override this function")
