@@ -9,6 +9,10 @@ import config
 
 
 class OxFpp(FaceMatcherBase):
+    """
+    Impl based on MS Project Oxford.
+    https://www.projectoxford.ai/
+    """
     def add_person(self, missing_person):
         """
         :type missing_person: MissingPerson
@@ -43,5 +47,5 @@ class OxFpp(FaceMatcherBase):
         print out
 
 
-        # x = OxFpp(None,False)
-        # x.test()
+x = OxFpp(None,False)
+#x.test()
