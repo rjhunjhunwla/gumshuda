@@ -17,7 +17,7 @@ def index(request):
 
 
 @login_required
-def add_pic_to_person(request):
+def add_pic_to_person(request): 
     # validate if this user owns this profile, then only she can add picture to this profile.
     if 'person_id' not in request.GET:
         raise Http404

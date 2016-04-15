@@ -1,11 +1,7 @@
 class FaceMatcherBase:
-    def __init__(self, data, is_url):
-        self.data = data
-        self.is_url = is_url
-        self.picture_id = None
-        self.missing_person_id = None
-        self.face_id = None
-        self.face_data = None
+    def __init__(self, picture):
+        self.picture = picture
+        self.person = None
         pass
 
     def match(self):

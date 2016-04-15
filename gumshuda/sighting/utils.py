@@ -6,6 +6,12 @@ from .models import Sighting
 from oxfordaifacematcher import OxFpp
 import hashlib
 
+
+def find_picture(data):
+    csum = hashlib.sha256(data).hexdigest()
+    return Picture.objects.filter(csum=csum)
+
+
 def save_picture(data, face_data):
     """
     Save a picture in database and return id,
@@ -103,23 +109,20 @@ def update_sighting_for_person(seen_pic_id, person_id, reporter):
     return r.id
 
 
-def get_matcher(data, is_url):
-    return OxFpp(data, is_url)
+def get_matcher(data):
+    return OxFpp(data)
 
 
-def handle_uploaded_file(request):
-    if request.method == 'POST':
-        data = request.FILES['file'].read()
-        if len(data) > 0:
-            face_matcher = get_matcher(data, False)
-            face_matcher.find_face()
-            if face_matcher.face_id is not None:
-                return face_matcher
-            else:
-                raise Exception("No face found")
+def handle_uploaded_file(data):
+    p = find_picture(data)
+    if p is not None:
+        raise Exception("This picture already exists and has been checked")
+    face_matcher = get_matcher(p)
+    if face_matcher.find_face() is True and face_matcher.picture.face_id is not None:
+        return face_matcher
+    else:
+        raise Exception("No face found")
 
-        raise Exception("no image data found")
-    raise Exception("Only POST supported")
 
 
 def get_face_ids_for_missing_person_from_db(person_id):
